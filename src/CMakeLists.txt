@@ -1,8 +1,3 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
-
-project(voxelProcessing)
-
-set(CMAKE_BUILD_TYPE Debug)
 
 FIND_PACKAGE(PCL 1.6 REQUIRED)
 
@@ -13,7 +8,8 @@ add_definitions("-Dqh_QHpointer")
 
 FIND_PACKAGE(OpenCV REQUIRED)
 
-file(MAKE_DIRECTORY ${../bin/})
+set(dir ${CMAKE_CURRENT_DIR}../../bin/)
+set(EXECUTABLE_OUTPUT_PATH ${dir} CACHE PATH "Build directory" FORCE)
 
-add_executable(../bin/voxelProcessing main.cpp voxelizer.cpp camera.cpp RayCaster.cpp IO.cpp utils.cpp)
-target_link_libraries (../bin/voxelProcessing ${PCL_LIBRARIES} ${OpenCV_LIBS})
+add_executable(voxelProcessing main.cpp voxelizer.cpp camera.cpp RayCaster.cpp IO.cpp utils.cpp)
+target_link_libraries (voxelProcessing ${PCL_LIBRARIES} ${OpenCV_LIBS})
