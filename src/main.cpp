@@ -592,7 +592,7 @@ int main ( int argc, char *argv[] )
 	//Clean it
 	voxelize.depthClean();	
 
-	voxelize.writeVoxelCenters("depthClean.ply");
+	//voxelize.writeVoxelCenters("depthClean.ply");
 	//Fill cloud for future use	
 	createVoxelCube(voxelize, voxelCloudFull);
 	
@@ -621,10 +621,10 @@ int main ( int argc, char *argv[] )
 	 
 	double maxNum = (double)*std::max_element(knownVoxelPts.begin(),knownVoxelPts.end());
 
-	writer.write<pType>("knownVoxels.ply", *knownVoxels);
-	writer.write<pType>("estimatedVoxels.ply", *estimatedVoxels);
-	writer.write<pType>("knownVoxelsE.ply", *knownVoxels);
-	writer.write<pType>("estimatedVoxelsE.ply", *estimatedVoxels);
+	//writer.write<pType>("knownVoxels.ply", *knownVoxels);
+	//writer.write<pType>("estimatedVoxels.ply", *estimatedVoxels);
+	//writer.write<pType>("knownVoxelsE.ply", *knownVoxels);
+	//writer.write<pType>("estimatedVoxelsE.ply", *estimatedVoxels);
 
 
 	//Write centers
@@ -848,9 +848,10 @@ outEnE.close();
 	}
 
 	//Save the cloud
-	writer.write<pType>("estimatedVoxelsEnergy.ply",*estimatedVoxelsE);
-	writer.write<pType>("estimatedVoxelsColor.ply",*estimatedVoxels);
+	//writer.write<pType>("estimatedVoxelsEnergy.ply",*estimatedVoxelsE);
+	//writer.write<pType>("estimatedVoxelsColor.ply",*estimatedVoxels);
 
+/*
 for(int t = 1; t < 11; t++){
 stringstream ss2;
 double thresh = ((double)t)/10.0 - 0.05;
@@ -866,23 +867,24 @@ for(int i = 0; i < estimatedInfo.size(); i++){
 		pcl::PointXYZRGB pointToAdd2;
 
 		//if( estimatedInfo[i].AvgColor.val[0] || estimatedInfo[i].AvgColor.val[1] || estimatedInfo[i].AvgColor.val[2]){
-/*
-			pointToAdd2.x =  estimatedVoxels->points[i].x;
-			pointToAdd2.y =  estimatedVoxels->points[i].y;
-			pointToAdd2.z =  estimatedVoxels->points[i].z;
+
+//			pointToAdd2.x =  estimatedVoxels->points[i].x;
+//			pointToAdd2.y =  estimatedVoxels->points[i].y;
+//			pointToAdd2.z =  estimatedVoxels->points[i].z;
 	
-			pointToAdd2.b = estimatedInfo[i].AvgColor.val[0];
-			pointToAdd2.g = estimatedInfo[i].AvgColor.val[1];
-			pointToAdd2.r = estimatedInfo[i].AvgColor.val[2];
-*/
+//			pointToAdd2.b = estimatedInfo[i].AvgColor.val[0];
+//			pointToAdd2.g = estimatedInfo[i].AvgColor.val[1];
+//			pointToAdd2.r = estimatedInfo[i].AvgColor.val[2];
+
 			outCloud3.push_back(estimatedVoxels->points[i]);
-	//	}
+		}
 	}
 
 }
 
 	writer.write<pType>(ss2.str(),outCloud3);
 }
+*/
 
 //Write true color voxels out
 
@@ -927,8 +929,9 @@ writer.write<pType>("voxelsTrueColor.ply",*knownAndEstVoxelsC);
 
 	//Save
 
-	writer.write<pType>("voxelColored.ply",*knownAndEstVoxels);
-	writer.write<pType>("voxelEnergies.ply",*knownAndEstVoxelsE);
+	//writer.write<pType>("voxelColored.ply",*knownAndEstVoxels);
+	//writer.write<pType>("voxelEnergies.ply",*knownAndEstVoxelsE);
+
 /*	//Set up voxelInfo for known voxels
 	std::vector<voxelInfo> knownInfo(knownVoxels->size());
 
@@ -1481,12 +1484,12 @@ writer.write<pType>(ss.str(),outCloud2);
 	}	
 
 	//Cluster
+	double compact;
 	std::vector<double> compacts;
-
+/*
 	ofstream writeC;
 	writeC.open("objectiveFunction.txt");
 	
-	double compact;
       for(int i = 2; i < 80; i++){
 	cv::Mat cMeans,lbls,cnts;
 	colorMeans.copyTo(cMeans);
@@ -1495,7 +1498,7 @@ writer.write<pType>(ss.str(),outCloud2);
 	writeC << i << " " << compact << std::endl;
       }
 	writeC.close();
-
+*/
 	compact = cv::kmeans(colorMeans, numMat, labels, cv::TermCriteria(cv::TermCriteria::COUNT,100,1), 1, cv::KMEANS_RANDOM_CENTERS, centers);
 	//Create new point clusters
 	std::vector<pcl::PointIndices> clustersK(numMat);
@@ -1606,6 +1609,6 @@ std::cout << "Triangulating Point Cloud" << std::endl;
 
 	return EXIT_SUCCESS;
 */
-	std::string dcPath = "dualContouringInput";
-	writeDualContouring(dcPath, vInfo.minZ, knownAndEstVoxels);
+	//std::string dcPath = "dualContouringInput";
+	//writeDualContouring(dcPath, vInfo.minZ, knownAndEstVoxels);
 }				/* ----------  end of function main  ---------- */
