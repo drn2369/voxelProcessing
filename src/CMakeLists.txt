@@ -13,5 +13,7 @@ add_definitions("-Dqh_QHpointer")
 
 FIND_PACKAGE(OpenCV REQUIRED)
 
+file(MAKE_DIRECTORY ${../bin/})
+
 add_executable(../bin/voxelQuality main.cpp voxelizer.cpp camera.cpp RayCaster.cpp IO.cpp utils.cpp)
 target_link_libraries (../bin/voxelQuality ${PCL_LIBRARIES} ${OpenCV_LIBS})
