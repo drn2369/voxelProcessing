@@ -686,6 +686,11 @@ int main ( int argc, char *argv[] )
 		std::cout << "Processing: " << imgFileList[i] << std::endl;
 		//Read in image (image list and cameras are in same order)
 		cv::Mat image = cv::imread(imgFileList[i]);
+
+		if(!image.data){
+			std::cout << "Unable to load: " << imgFileList[i] << std::endl;
+		}
+
 		image.convertTo(image,CV_32FC3,1./255);
 
 		//Convert to HLS (bring 0-255 to 0-1)
@@ -801,8 +806,9 @@ outEnE.open("energies.txt");
 			calculateEnergy(estimatedInfo[i]);
 
 		}else{
-			//Otherwise energy is set to 0.5
-			estimatedInfo[i].energy = 0.5;
+			//Otherwise energy is set to -1
+			//estimatedInfo[i].energy = 0.5;
+			estimatedInfo[i].energy = -1.0;
 		}
 		//Modulate energy by max num of points in voxel
 
@@ -834,10 +840,18 @@ outEnE.close();
 		estimatedVoxelsC->points[i].b = (int)estimatedInfo[i].AvgColor.val[0];
 		estimatedVoxelsC->points[i].g = (int)estimatedInfo[i].AvgColor.val[1];
 		estimatedVoxelsC->points[i].r = (int)estimatedInfo[i].AvgColor.val[2];
-		
-		estimatedVoxelsE->points[i].r = (int)(estimatedInfo[i].energy*255);
-		estimatedVoxelsE->points[i].g = (int)(estimatedInfo[i].energy*255);
-		estimatedVoxelsE->points[i].b = (int)(estimatedInfo[i].energy*255);
+	
+		double voxEng = estimatedInfo[i].energy;
+
+	      if( voxEng > 0 ){	
+		estimatedVoxelsE->points[i].r = (int)(voxEng*255);
+		estimatedVoxelsE->points[i].g = (int)(voxEng*255);
+		estimatedVoxelsE->points[i].b = (int)(voxEng*255);
+	      }else{
+		estimatedVoxelsE->points[i].r = 255;//(int)(voxEng*255);
+		estimatedVoxelsE->points[i].g = 0;//(int)(voxEng*255);
+		estimatedVoxelsE->points[i].b = 0;//(int)(voxEng*255);
+	      }
 	}
 
 	//Only keep energies 0.5 and up
@@ -930,7 +944,7 @@ writer.write<pType>("voxelsTrueColor.ply",*knownAndEstVoxelsC);
 	//Save
 
 	//writer.write<pType>("voxelColored.ply",*knownAndEstVoxels);
-	//writer.write<pType>("voxelEnergies.ply",*knownAndEstVoxelsE);
+	writer.write<pType>("voxelEnergies.ply",*knownAndEstVoxelsE);
 
 /*	//Set up voxelInfo for known voxels
 	std::vector<voxelInfo> knownInfo(knownVoxels->size());
